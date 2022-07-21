@@ -1,0 +1,1 @@
+Some setup commands I end up running on some VPSs to get em up and running
