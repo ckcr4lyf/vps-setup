@@ -1,22 +1,24 @@
-cd ~
-mkdir -p .apps
-cd .apps
+# need sudo for the following
+mkdir -p /opt/prometheus
+chown -R poiasd:poiasd /opt/prometheus
+mkdir -p /opt/node_exporter
+chown -R poiasd:poiasd /opt/node_exporter
+mkdir -p /opt/grafana
+chown -R poiasd:poiasd /opt/grafana
 
-wget https://github.com/prometheus/prometheus/releases/download/v2.37.0/prometheus-2.37.0.linux-amd64.tar.gz
-tar -xvzf prometheus-2.37.0.linux-amd64.tar.gz
-cd prometheus-2.37.0.linux-amd64
-chmod +x prometheus promtool
+cd /tmp
 
-cd ../
-wget https://github.com/prometheus/node_exporter/releases/download/v1.4.0-rc.0/node_exporter-1.4.0-rc.0.linux-amd64.tar.gz
-tar -xvzf node_exporter-1.4.0-rc.0.linux-amd64.tar.gz
-cd node_exporter-1.4.0-rc.0.linux-amd64
-chmod +x node_exporter
+wget https://github.com/prometheus/prometheus/releases/download/v2.42.0/prometheus-2.42.0.linux-amd64.tar.gz
+tar -xvzf prometheus-2.42.0.linux-amd64.tar.gz  --strip-components=1 -C /opt/prometheus
+chmod +x /opt/prometheus/prometheus
+chmod +x /opt/prometheus/promtool
 
-cd ../
-wget https://dl.grafana.com/enterprise/release/grafana-enterprise-9.0.6.linux-amd64.tar.gz
-tar -xvf grafana-enterprise-9.0.6.linux-amd64.tar.gz
-cd grafana-9.0
+wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+tar -xvzf node_exporter-1.5.0.linux-amd64.tar.gz --strip-components=1 -C /opt/node_exporter
+chmod +x /opt/node_exporter/node_exporter
+
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise-9.3.6.linux-amd64.tar.gz
+tar -xzvf grafana-enterprise-9.3.6.linux-amd64.tar.gz --strip-components=1 -C /opt/grafana
 
 # Make service files , then:
 systemctl daemon-reload

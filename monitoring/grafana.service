@@ -1,0 +1,17 @@
+# /etc/systemd/system/grafana.service
+
+[Unit]
+Description=Grafana
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=poiasd
+Group=poiasd
+Type=simple
+ExecStart=/opt/grafana/bin/grafana-server \
+    --homepath=/opt/grafana \
+    --config=/opt/grafana/conf/defaults.ini
+
+[Install]
+WantedBy=multi-user.target

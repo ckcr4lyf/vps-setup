@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenVPN Bombay
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=openvpn /etc/openvpn/configs/xeon2696.ovpn
+
+[Install]
+WantedBy=multi-user.target

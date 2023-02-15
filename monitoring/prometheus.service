@@ -9,9 +9,10 @@ After=network-online.target
 User=poiasd
 Group=poiasd
 Type=simple
-ExecStart=/home/poiasd/.apps/prometheus-2.37.0.linux-amd64/prometheus \
-    --config.file /home/poiasd/.apps/prometheus-2.37.0.linux-amd64/prometheus.yml \
-    --storage.tsdb.path /home/poiasd/.apps/prometheus-2.37.0.linux-amd64/ \
+ExecStart=/opt/prometheus/prometheus \
+    --config.file /opt/prometheus/prometheus.yml \
+    --storage.tsdb.path /opt/prometheus/ \
+    --web.listen-address=127.0.0.1:9090
 
 [Install]
 WantedBy=multi-user.target

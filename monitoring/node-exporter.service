@@ -9,7 +9,7 @@ After=network-online.target
 User=poiasd
 Group=poiasd
 Type=simple
-ExecStart=/home/poiasd/.apps/node_exporter-1.4.0-rc.0.linux-amd64/node_exporter
+ExecStart=/opt/node_exporter/node_exporter --web.listen-address=127.0.0.1:9100
 
 [Install]
 WantedBy=multi-user.target
