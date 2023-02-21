@@ -20,6 +20,8 @@ chmod +x /opt/node_exporter/node_exporter
 wget https://dl.grafana.com/enterprise/release/grafana-enterprise-9.3.6.linux-amd64.tar.gz
 tar -xzvf grafana-enterprise-9.3.6.linux-amd64.tar.gz --strip-components=1 -C /opt/grafana
 
+# Need to modify grafana.ini!
+
 # Make service files , then:
 systemctl daemon-reload
 systemctl start node-exporter
