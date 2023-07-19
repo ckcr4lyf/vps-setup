@@ -5,6 +5,8 @@ mkdir -p /opt/node_exporter
 chown -R poiasd:poiasd /opt/node_exporter
 mkdir -p /opt/grafana
 chown -R poiasd:poiasd /opt/grafana
+mkdir -p /opt/pushgateway
+chown -R poiasd:poiasd /opt/pushgateway
 
 cd /tmp
 
@@ -19,6 +21,9 @@ chmod +x /opt/node_exporter/node_exporter
 
 wget https://dl.grafana.com/enterprise/release/grafana-enterprise-9.3.6.linux-amd64.tar.gz
 tar -xzvf grafana-enterprise-9.3.6.linux-amd64.tar.gz --strip-components=1 -C /opt/grafana
+
+wget https://github.com/prometheus/pushgateway/releases/download/v1.6.0/pushgateway-1.6.0.linux-amd64.tar.gz
+tar -xzvf pushgateway-1.6.0.linux-amd64.tar.gz --strip-components=1 -C /opt/pushgateway
 
 # Need to modify grafana.ini!
 
