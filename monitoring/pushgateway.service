@@ -1,0 +1,16 @@
+# /etc/systemd/system/pushgateway.service
+
+[Unit]
+Description=Push Gateway
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=poiasd
+Group=poiasd
+Type=simple
+ExecStart=/opt/pushgateway/pushgateway \
+    --web.listen-address=127.0.0.1:9091
+
+[Install]
+WantedBy=multi-user.target

@@ -31,3 +31,4 @@ tar -xzvf pushgateway-1.6.0.linux-amd64.tar.gz --strip-components=1 -C /opt/push
 systemctl daemon-reload
 systemctl start node-exporter
 systemctl start prometheus
+systemctl start pushgateway
