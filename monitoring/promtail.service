@@ -1,7 +1,7 @@
-# /etc/systemd/system/loki.service
+# /etc/systemd/system/promtail.service
 
 [Unit]
-Description=Grafana Loki
+Description=Promtail
 Wants=network-online.target
 After=network-online.target
 
@@ -9,7 +9,7 @@ After=network-online.target
 User=poiasd
 Group=poiasd
 Type=simple
-ExecStart=/opt/loki/loki -config.file /opt/loki/loki-config.yaml
+ExecStart=/opt/promtail/promtail -config.file /opt/promtail/promtail-config.yaml
 
 [Install]
 WantedBy=multi-user.target

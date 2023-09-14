@@ -9,6 +9,8 @@ mkdir -p /opt/pushgateway
 chown -R poiasd:poiasd /opt/pushgateway
 mkdir -p /opt/loki
 chown -R poiasd:poiasd /opt/loki
+mkdir -p /opt/promtail
+chown -R poiasd:poiasd /opt/promtail
 
 cd /tmp
 
@@ -29,7 +31,13 @@ tar -xzvf pushgateway-1.6.0.linux-amd64.tar.gz --strip-components=1 -C /opt/push
 
 wget https://github.com/grafana/loki/releases/download/v2.9.0/loki-linux-amd64.zip
 unzip loki-linux-amd64.zip -d /opt/loki
+mv /opt/loki/loki-linux-amd64 /opt/loki/loki
 cp loki-config.yaml /opt/loki/
+
+wget https://github.com/grafana/loki/releases/download/v2.9.0/promtail-linux-amd64.zip
+unzip promtail-linux-amd64.zip -d /opt/promtail
+mv /opt/promtail/promtail-linux-amd64 /opt/promtail/promtail
+cp promtail-config.yaml /opt/promtail/
 
 # Need to modify grafana.ini!
 
@@ -38,3 +46,5 @@ systemctl daemon-reload
 systemctl start node-exporter
 systemctl start prometheus
 systemctl start pushgateway
+systemctl start loki
+systemctl start promtail
