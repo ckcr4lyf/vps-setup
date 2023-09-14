@@ -1,0 +1,15 @@
+# /etc/systemd/system/promtail.service
+
+[Unit]
+Description=Promtail
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=poiasd
+Group=poiasd
+Type=simple
+ExecStart=/opt/promtail/promtail -config.file /opt/promtail/promtail-config.yaml
+
+[Install]
+WantedBy=multi-user.target

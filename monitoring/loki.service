@@ -1,0 +1,15 @@
+# /etc/systemd/system/loki.service
+
+[Unit]
+Description=Grafana Loki
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=poiasd
+Group=poiasd
+Type=simple
+ExecStart=/opt/loki/loki -config.file /opt/loki/loki-config.yaml
+
+[Install]
+WantedBy=multi-user.target
