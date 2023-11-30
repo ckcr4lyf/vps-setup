@@ -1,0 +1,16 @@
+# /etc/systemd/system/postgres-exporter.service
+
+[Unit]
+Description=PostgreSQL Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=poiasd
+Group=poiasd
+Type=simple
+Environment="DATA_SOURCE_NAME=postgresql://kiryuu:password@localhost:5432/kiryuu"
+ExecStart=/opt/postgres_exporter/postgres_exporter --web.listen-address 127.0.0.1:9187
+
+[Install]
+WantedBy=multi-user.target
