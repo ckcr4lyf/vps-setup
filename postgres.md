@@ -41,6 +41,13 @@ psql
 \password
 ```
 
+### Misc
+
+Reload prometheus via:
+
+```
+kill -s SIGHUP (PID)
+```
 
 ### References
 
