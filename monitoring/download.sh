@@ -29,7 +29,7 @@ tar -xzvf grafana-enterprise-9.3.6.linux-amd64.tar.gz --strip-components=1 -C /o
 wget https://github.com/prometheus/pushgateway/releases/download/v1.6.0/pushgateway-1.6.0.linux-amd64.tar.gz
 tar -xzvf pushgateway-1.6.0.linux-amd64.tar.gz --strip-components=1 -C /opt/pushgateway
 
-wget https://github.com/grafana/loki/releases/download/v2.9.0/loki-linux-amd64.zip
+wget https://github.com/grafana/loki/releases/download/v3.0.1/loki-linux-amd64.zip
 unzip loki-linux-amd64.zip -d /opt/loki
 mv /opt/loki/loki-linux-amd64 /opt/loki/loki
 cp loki-config.yaml /opt/loki/
