@@ -23,8 +23,8 @@ wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_e
 tar -xvzf node_exporter-1.5.0.linux-amd64.tar.gz --strip-components=1 -C /opt/node_exporter
 chmod +x /opt/node_exporter/node_exporter
 
-wget https://dl.grafana.com/enterprise/release/grafana-enterprise-9.3.6.linux-amd64.tar.gz
-tar -xzvf grafana-enterprise-9.3.6.linux-amd64.tar.gz --strip-components=1 -C /opt/grafana
+wget https://dl.grafana.com/enterprise/release/grafana-enterprise-11.2.1.linux-amd64.tar.gz
+tar -xzvf grafana-enterprise-11.2.1.linux-amd64.tar.gz --strip-components=1 -C /opt/grafana
 
 wget https://github.com/prometheus/pushgateway/releases/download/v1.6.0/pushgateway-1.6.0.linux-amd64.tar.gz
 tar -xzvf pushgateway-1.6.0.linux-amd64.tar.gz --strip-components=1 -C /opt/pushgateway
