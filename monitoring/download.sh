@@ -1,16 +1,16 @@
 # need sudo for the following
 mkdir -p /opt/prometheus
-chown -R poiasd:poiasd /opt/prometheus
+chown -R ubuntu:ubuntu /opt/prometheus
 mkdir -p /opt/node_exporter
-chown -R poiasd:poiasd /opt/node_exporter
+chown -R ubuntu:ubuntu /opt/node_exporter
 mkdir -p /opt/grafana
-chown -R poiasd:poiasd /opt/grafana
+chown -R ubuntu:ubuntu /opt/grafana
 mkdir -p /opt/pushgateway
-chown -R poiasd:poiasd /opt/pushgateway
+chown -R ubuntu:ubuntu /opt/pushgateway
 mkdir -p /opt/loki
-chown -R poiasd:poiasd /opt/loki
+chown -R ubuntu:ubuntu /opt/loki
 mkdir -p /opt/promtail
-chown -R poiasd:poiasd /opt/promtail
+chown -R ubuntu:ubuntu /opt/promtail
 
 cd /tmp
 

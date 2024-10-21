@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=poiasd
-Group=poiasd
+User=ubuntu
+Group=ubuntu
 Type=simple
 Environment="DATA_SOURCE_NAME=postgresql://kiryuu:password@localhost:5432/kiryuu"
 ExecStart=/opt/postgres_exporter/postgres_exporter --web.listen-address 127.0.0.1:9187
