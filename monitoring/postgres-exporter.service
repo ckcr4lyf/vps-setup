@@ -9,7 +9,7 @@ After=network-online.target
 User=ubuntu
 Group=ubuntu
 Type=simple
-Environment="DATA_SOURCE_NAME=postgresql://kiryuu:password@localhost:5432/kiryuu"
+Environment="DATA_SOURCE_NAME=postgresql://postgres:password@localhost:5432/postgres"
 ExecStart=/opt/postgres_exporter/postgres_exporter --web.listen-address 127.0.0.1:9187
 
 [Install]

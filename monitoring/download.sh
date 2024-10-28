@@ -1,8 +1,6 @@
 # need sudo for the following
 mkdir -p /opt/prometheus
 chown -R ubuntu:ubuntu /opt/prometheus
-mkdir -p /opt/node_exporter
-chown -R ubuntu:ubuntu /opt/node_exporter
 mkdir -p /opt/grafana
 chown -R ubuntu:ubuntu /opt/grafana
 mkdir -p /opt/pushgateway
@@ -11,6 +9,12 @@ mkdir -p /opt/loki
 chown -R ubuntu:ubuntu /opt/loki
 mkdir -p /opt/promtail
 chown -R ubuntu:ubuntu /opt/promtail
+
+# Exporters
+mkdir -p /opt/node_exporter
+chown -R ubuntu:ubuntu /opt/node_exporter
+mkdir -p /opt/postgres_exporter
+chown -R ubuntu:ubuntu /opt/postgres_exporter
 
 cd /tmp
 
@@ -39,8 +43,11 @@ unzip promtail-linux-amd64.zip -d /opt/promtail
 mv /opt/promtail/promtail-linux-amd64 /opt/promtail/promtail
 cp promtail-config.yaml /opt/promtail/
 
-# Need to modify grafana.ini!
+wget https://github.com/prometheus-community/postgres_exporter/releases/download/v0.15.0/postgres_exporter-0.15.0.linux-amd64.tar.gz
+tar -xvzf postgres_exporter-0.15.0.linux-amd64.tar.gz  --strip-components=1 -C /opt/postgres_exporter
+chmod +x /opt/postgres_exporter/postgres_exporter
 
+# Need to modify grafana.ini!
 # Make service files , then:
 systemctl daemon-reload
 systemctl start node-exporter
@@ -48,3 +55,4 @@ systemctl start prometheus
 systemctl start pushgateway
 systemctl start loki
 systemctl start promtail
+systemctl start postgres-exporter
