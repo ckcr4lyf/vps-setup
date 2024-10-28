@@ -40,4 +40,4 @@ scrape_configs:
   # redis exporter (https://github.com/oliver006/redis_exporter)
   - job_name: 'redis'
     static_configs:
-    - targets: ['localhost:9121']    
+    - targets: ['localhost:9121']

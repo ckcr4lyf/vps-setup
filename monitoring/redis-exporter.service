@@ -1,0 +1,15 @@
+# /etc/systemd/system/redis-exporter.service
+
+[Unit]
+Description=Redis Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+Type=simple
+ExecStart=/opt/redis_exporter/redis_exporter --web.listen-address 127.0.0.1:9121
+
+[Install]
+WantedBy=multi-user.target
