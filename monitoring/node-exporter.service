@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=poiasd
-Group=poiasd
+User=ubuntu
+Group=ubuntu
 Type=simple
 ExecStart=/opt/node_exporter/node_exporter --web.listen-address=127.0.0.1:9100
 

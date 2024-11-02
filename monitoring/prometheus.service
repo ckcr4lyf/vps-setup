@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=poiasd
-Group=poiasd
+User=ubuntu
+Group=ubuntu
 Type=simple
 ExecStart=/opt/prometheus/prometheus \
     --config.file /opt/prometheus/prometheus.yml \
