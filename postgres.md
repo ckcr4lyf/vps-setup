@@ -27,6 +27,7 @@ To create a DB
 createdb my_database_name
 ```
 
+### Create User in Postgres + Linux
 We also need to add the user in Linux. As the original user (i.e. NOT `postgres`). Replace `kiryuu` with whatever you want.
 
 ```
@@ -39,6 +40,13 @@ Update password for user in Postgres
 sudo -i -u kiryuu
 psql
 \password
+```
+
+### Create User in Postgres, NOT Linux
+```
+CREATE USER your_new_username WITH PASSWORD 'your_secure_password';
+CREATE DATABASE mydatabase;
+GRANT ALL PRIVILEGES ON DATABASE mydatabase TO your_new_username;
 ```
 
 ### Misc
