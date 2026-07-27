@@ -11,7 +11,7 @@ Group=ubuntu
 Type=simple
 ExecStart=/opt/grafana/bin/grafana-server \
     --homepath=/opt/grafana \
-    --config=/opt/grafana/conf/defaults.ini
+    --config=/opt/grafana/conf/custom.ini
 
 [Install]
 WantedBy=multi-user.target

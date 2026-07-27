@@ -1,0 +1,19 @@
+# /etc/systemd/system/alloy.service
+
+[Unit]
+Description=Grafana Alloy
+Wants=network-online.target
+After=network-online.target loki.service
+
+[Service]
+User=ubuntu
+Group=ubuntu
+SupplementaryGroups=adm
+Type=simple
+ExecStart=/opt/alloy/alloy run /opt/alloy/config.alloy \
+    --storage.path=/var/lib/alloy/data \
+    --server.http.listen-addr=127.0.0.1:12345
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

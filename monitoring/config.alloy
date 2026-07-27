@@ -1,0 +1,46 @@
+local.file_match "nginx_access" {
+  path_targets = [{
+    __path__   = "/var/log/nginx/access.log",
+    job        = "nginx",
+    log_type   = "access",
+  }]
+}
+
+loki.source.file "nginx_access" {
+  targets    = local.file_match.nginx_access.targets
+  forward_to = [loki.process.nginx_access.receiver]
+}
+
+loki.process "nginx_access" {
+  forward_to = [loki.write.default.receiver]
+
+  stage.regex {
+    expression = "^(?P<remote_addr>[\\w\\.:]+) - (?P<remote_user>[^ ]*) \\[(?P<time_local>[^\\]]*)\\] \"(?P<method>[^ ]*) (?P<request_uri>[^ ]*) (?P<protocol>[^\"]*)\" (?P<status>\\d+) (?P<body_bytes_sent>\\d+) \"(?P<http_referer>[^\"]*)\" \"(?P<http_user_agent>[^\"]*)\""
+  }
+
+  stage.labels {
+    values = {
+      status = "",
+      method = "",
+    }
+  }
+}
+
+local.file_match "nginx_error" {
+  path_targets = [{
+    __path__   = "/var/log/nginx/error.log",
+    job        = "nginx",
+    log_type   = "error",
+  }]
+}
+
+loki.source.file "nginx_error" {
+  targets    = local.file_match.nginx_error.targets
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://localhost:3100/loki/api/v1/push"
+  }
+}
