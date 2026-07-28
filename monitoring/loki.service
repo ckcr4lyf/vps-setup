@@ -9,6 +9,8 @@ After=network-online.target
 User=__RUN_USER__
 Group=__RUN_USER__
 Type=simple
+MemoryHigh=300M
+MemoryMax=384M
 ExecStart=/opt/loki/loki -config.file /opt/loki/loki-config.yaml
 
 [Install]

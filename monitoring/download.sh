@@ -262,6 +262,8 @@ install_redis_exporter() {
 install_loki() {
   prepare_dir /opt/loki
   prepare_dir /var/lib/loki
+  prepare_dir /var/lib/loki/wal
+  prepare_dir /var/lib/loki/compactor
   download "https://github.com/grafana/loki/releases/download/v${LOKI_VERSION}/loki-${ARCH}.zip" \
     "${WORKDIR}/loki.zip"
   unzip -q "${WORKDIR}/loki.zip" -d /opt/loki
