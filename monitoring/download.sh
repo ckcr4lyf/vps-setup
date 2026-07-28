@@ -10,6 +10,8 @@ ARCH="linux-amd64"
 PROMETHEUS_VERSION="2.42.0"
 NODE_EXPORTER_VERSION="1.5.0"
 GRAFANA_VERSION="13.1.1"
+# Build ID from the GitHub release assets page (changes per release).
+GRAFANA_BUILD_ID="29761037902"
 PUSHGATEWAY_VERSION="1.6.0"
 LOKI_VERSION="3.7.4"
 ALLOY_VERSION="1.18.0"
@@ -156,12 +158,21 @@ install_alloy() {
 }
 
 install_grafana() {
-  prepare_dir /opt/grafana
-  download "https://dl.grafana.com/oss/release/grafana-${GRAFANA_VERSION}.${ARCH}.tar.gz" \
-    "${WORKDIR}/grafana.tar.gz"
-  tar -xzf "${WORKDIR}/grafana.tar.gz" --strip-components=1 -C /opt/grafana
-  cp "${SCRIPT_DIR}/grafana.ini" /opt/grafana/conf/custom.ini
-  chown "${RUN_USER}:${RUN_USER}" /opt/grafana/conf/custom.ini
+  local deb="grafana_${GRAFANA_VERSION}_${GRAFANA_BUILD_ID}_linux_amd64.deb"
+
+  echo "  Downloading Grafana from GitHub (~280MB)..."
+  download "https://github.com/grafana/grafana/releases/download/v${GRAFANA_VERSION}/${deb}" \
+    "${WORKDIR}/${deb}"
+
+  DEBIAN_FRONTEND=noninteractive apt-get install -y adduser libfontconfig1 musl
+  dpkg -i "${WORKDIR}/${deb}" || DEBIAN_FRONTEND=noninteractive apt-get install -f -y
+
+  cp "${SCRIPT_DIR}/grafana.ini" /etc/grafana/grafana.ini
+  chown root:grafana /etc/grafana/grafana.ini
+  chmod 640 /etc/grafana/grafana.ini
+
+  # The .deb enables grafana-server; we use our own unit file instead.
+  systemctl disable --now grafana-server 2>/dev/null || true
 }
 
 install_component() {

@@ -6,12 +6,12 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=ubuntu
-Group=ubuntu
+User=grafana
+Group=grafana
 Type=simple
-ExecStart=/opt/grafana/bin/grafana-server \
-    --homepath=/opt/grafana \
-    --config=/opt/grafana/conf/custom.ini
+ExecStart=/usr/sbin/grafana-server \
+    --config=/etc/grafana/grafana.ini \
+    --homepath=/usr/share/grafana
 
 [Install]
 WantedBy=multi-user.target
