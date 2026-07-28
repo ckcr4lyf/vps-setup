@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=ubuntu
-Group=ubuntu
+User=__RUN_USER__
+Group=__RUN_USER__
 Type=simple
 ExecStart=/opt/loki/loki -config.file /opt/loki/loki-config.yaml
 

@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=ubuntu
-Group=ubuntu
+User=__RUN_USER__
+Group=__RUN_USER__
 Type=simple
 Environment="DATA_SOURCE_NAME=postgresql://postgres:password@localhost:5432/postgres"
 ExecStart=/opt/postgres_exporter/postgres_exporter --web.listen-address 127.0.0.1:9187

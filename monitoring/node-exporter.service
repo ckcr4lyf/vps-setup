@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=ubuntu
-Group=ubuntu
+User=__RUN_USER__
+Group=__RUN_USER__
 Type=simple
 ExecStart=/opt/node_exporter/node_exporter --web.listen-address=127.0.0.1:9100
 

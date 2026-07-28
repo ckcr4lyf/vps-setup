@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-RUN_USER="${RUN_USER:-ubuntu}"
+RUN_USER="${RUN_USER:-}"
 ARCH="linux-amd64"
 
 PROMETHEUS_VERSION="2.42.0"
@@ -22,6 +22,30 @@ WORKDIR="$(mktemp -d)"
 trap 'rm -rf "${WORKDIR}"' EXIT
 
 SELECTED=()
+
+resolve_run_user() {
+  if [[ -z "${RUN_USER}" ]]; then
+    if [[ -n "${SUDO_USER:-}" ]]; then
+      RUN_USER="${SUDO_USER}"
+    elif [[ -n "${USER:-}" && "${USER}" != "root" ]]; then
+      RUN_USER="${USER}"
+    else
+      echo "Could not determine RUN_USER. Re-run with sudo from a normal user, or set RUN_USER=<user>." >&2
+      exit 1
+    fi
+  fi
+
+  if ! id -u "${RUN_USER}" &>/dev/null; then
+    echo "User '${RUN_USER}' does not exist on this system." >&2
+    exit 1
+  fi
+}
+
+install_service_unit() {
+  local component="$1"
+  sed "s/__RUN_USER__/${RUN_USER}/g" \
+    "${SCRIPT_DIR}/${component}.service" >"/etc/systemd/system/${component}.service"
+}
 
 prepare_dir() {
   local dir="$1"
@@ -92,6 +116,108 @@ select_components() {
   echo
   echo "Visualization:"
   prompt_yes_no "  grafana (dashboards)" && add_component grafana
+}
+
+metrics_component_selected() {
+  has_component prometheus ||
+    has_component node-exporter ||
+    has_component pushgateway ||
+    has_component postgres-exporter ||
+    has_component redis-exporter
+}
+
+should_scrape_prometheus() {
+  has_component prometheus || [[ -x /opt/prometheus/prometheus ]]
+}
+
+should_scrape_node_exporter() {
+  has_component node-exporter || [[ -d /opt/node_exporter ]]
+}
+
+should_scrape_pushgateway() {
+  has_component pushgateway || [[ -d /opt/pushgateway ]]
+}
+
+should_scrape_postgres_exporter() {
+  has_component postgres-exporter || [[ -d /opt/postgres_exporter ]]
+}
+
+should_scrape_redis_exporter() {
+  has_component redis-exporter || [[ -d /opt/redis_exporter ]]
+}
+
+write_prometheus_config() {
+  local config=/opt/prometheus/prometheus.yml
+
+  cat >"${config}" <<'EOF'
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+EOF
+
+  if should_scrape_prometheus; then
+    cat >>"${config}" <<'EOF'
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+EOF
+  fi
+
+  if should_scrape_node_exporter; then
+    cat >>"${config}" <<'EOF'
+  - job_name: node
+    static_configs:
+      - targets: ["localhost:9100"]
+EOF
+  fi
+
+  if should_scrape_postgres_exporter; then
+    cat >>"${config}" <<'EOF'
+  - job_name: postgres
+    static_configs:
+      - targets: ["localhost:9187"]
+EOF
+  fi
+
+  if should_scrape_redis_exporter; then
+    cat >>"${config}" <<'EOF'
+  - job_name: redis
+    static_configs:
+      - targets: ["localhost:9121"]
+EOF
+  fi
+
+  if should_scrape_pushgateway; then
+    cat >>"${config}" <<'EOF'
+  - job_name: pushgateway
+    static_configs:
+      - targets: ["localhost:9091"]
+EOF
+  fi
+
+  chown "${RUN_USER}:${RUN_USER}" "${config}"
+}
+
+maybe_configure_prometheus() {
+  if ! [[ -x /opt/prometheus/prometheus ]] || ! metrics_component_selected; then
+    return 0
+  fi
+
+  echo "==> Writing prometheus.yml"
+  write_prometheus_config
+
+  if systemctl is-enabled --quiet prometheus 2>/dev/null; then
+    systemctl restart prometheus
+  fi
 }
 
 install_prometheus() {
@@ -171,6 +297,9 @@ install_grafana() {
   chown root:grafana /etc/grafana/grafana.ini
   chmod 640 /etc/grafana/grafana.ini
 
+  mkdir -p /var/lib/grafana/plugins /var/log/grafana
+  chown -R grafana:grafana /var/lib/grafana /var/log/grafana
+
   # The .deb enables grafana-server; we use our own unit file instead.
   systemctl disable --now grafana-server 2>/dev/null || true
 }
@@ -195,7 +324,7 @@ install_component() {
 enable_services() {
   local component
   for component in "${SELECTED[@]}"; do
-    cp "${SCRIPT_DIR}/${component}.service" /etc/systemd/system/
+    install_service_unit "${component}"
   done
 
   systemctl daemon-reload
@@ -211,6 +340,10 @@ main() {
     echo "Run: sudo bash ${SCRIPT_DIR}/download.sh" >&2
     exit 1
   fi
+
+  resolve_run_user
+  echo "Installing as user: ${RUN_USER}"
+  echo
 
   select_components
 
@@ -233,6 +366,8 @@ main() {
   echo
   echo "==> Enabling systemd services"
   enable_services
+
+  maybe_configure_prometheus
 
   echo
   echo "Done. Enabled: ${SELECTED[*]}"

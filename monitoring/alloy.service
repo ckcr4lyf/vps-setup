@@ -6,8 +6,8 @@ Wants=network-online.target
 After=network-online.target loki.service
 
 [Service]
-User=ubuntu
-Group=ubuntu
+User=__RUN_USER__
+Group=__RUN_USER__
 SupplementaryGroups=adm
 Type=simple
 ExecStart=/opt/alloy/alloy run /opt/alloy/config.alloy \
